@@ -47,11 +47,14 @@ class Tab2Space:
                 output_file_path = p1 + '_notab' + p2
             else:
                 input_file_path = output_file_path
+        if not os.path.isfile(input_file_path):
+            print('[Error 0] Parse failed. File not exists')
+            return
         with open(input_file_path, 'r') as infile:
             try:
                 content = infile.read()
             except UnicodeDecodeError:
-                print('[Error 0] Parse failed. Unicode decode error')
+                print('[Error 1] Parse failed. Unicode decode error')
                 return
         new_content = self.linesep.join([self.tab2space_line(line) for line in content.splitlines()])
         os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
