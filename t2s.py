@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+from pprint import pprint
 from wcwidth import wcswidth
 
 
@@ -35,6 +36,7 @@ class Tab2Space:
             search_result = re.search(r'[^\t]', line)
             tab_num = search_result.start() if search_result is not None else len(line)
             space_num = tab_num * self.tab_width - line_idx % self.tab_width
+            line_idx += space_num
             line = line[tab_num:]
             newline += space_num * ' '
         return newline
@@ -56,7 +58,9 @@ class Tab2Space:
             except UnicodeDecodeError:
                 print('[Error 1] Parse failed. Unicode decode error')
                 return
-        new_content = self.linesep.join([self.tab2space_line(line) for line in content.splitlines()])
+        if not content.endswith(self.linesep):
+            content += self.linesep
+        new_content = self.linesep.join([self.tab2space_line(line) for line in content.split(self.linesep)])
         os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
         with open(output_file_path, 'w') as file:
             file.write(new_content)
