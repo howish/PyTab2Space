@@ -15,6 +15,7 @@ Feel free to try, it will create new file/folder instead of overwriting it:
 # Optional arguments
 - \[-f\| --is_folder]: Convert the tabs in whole project.
 - \[-o\| --overwrite]: Run in unsafe mode. It overwrite the original file/folder structure. 
+- \[-s\| --rts]: Remove trailing spaces. (default = false)
 - \[-w\| --tab_width]: Assign tab size if you need. (default = 4)
 - \[-e\| --code_ext]: Assign code extension types if you need. \
 (default = ('.c', '.cc', '.h', '.py', '.cs'))

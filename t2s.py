@@ -10,6 +10,7 @@ class Tab2Space:
     tab_width = 4
     code_exts = ('.c', '.cc', '.h', '.py', '.cs')
     safe_mode = True
+    erase_trailing_space = False
 
     def __init__(self):
         pass
@@ -39,6 +40,9 @@ class Tab2Space:
             line_idx += space_num
             line = line[tab_num:]
             newline += space_num * ' '
+
+        if self.erase_trailing_space:
+            newline = ('0' + newline).strip()[1:]
         return newline
 
     def tab2space_file(self, input_file_path, output_file_path=None):
@@ -48,7 +52,7 @@ class Tab2Space:
                 p1, p2 = os.path.splitext(input_file_path)
                 output_file_path = p1 + '_notab' + p2
             else:
-                input_file_path = output_file_path
+                output_file_path = input_file_path
         if not os.path.isfile(input_file_path):
             print('[Error 0] Parse failed. File not exists')
             return
@@ -58,6 +62,7 @@ class Tab2Space:
             except UnicodeDecodeError:
                 print('[Error 1] Parse failed. Unicode decode error')
                 return
+
         if not content.endswith(self.linesep):
             content += self.linesep
         new_content = self.linesep.join([self.tab2space_line(line) for line in content.split(self.linesep)])
@@ -92,12 +97,14 @@ def main():
     parser.add_argument('path', help='The path of target.')
     parser.add_argument('-f', '--is_folder', help='Add flag if target is folder', action='store_true')
     parser.add_argument('-o', '--overwrite', help='Use unsafe mode', action='store_true')
+    parser.add_argument('-s', '--rtw', help='Remove trailing space', action='store_true')
     parser.add_argument('-w', '--tab_width', help='Width of tab', type=int, default=4)
     parser.add_argument('-e', '--code_ext', help='The target code extensions', nargs='+')
     args = parser.parse_args()
     if args.path:
         t2s = Tab2Space()
         t2s.safe_mode = not args.overwrite
+        t2s.erase_trailing_space = args.rtw
         if args.code_ext is not None:
             t2s.code_exts += args.code_ext
         t2s.tab_width = args.tab_width
